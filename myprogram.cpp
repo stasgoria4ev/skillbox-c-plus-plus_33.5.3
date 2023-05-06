@@ -10,149 +10,6 @@ struct Registry {
 template<typename T1, typename T2>
 Registry<T1, T2> registry;
 
-//----------------------------------------------------add---------------------------------------------------------------
-template<typename T1, typename T2>
-void Add(T1 key, T2 value) {
-    registry<T1, T2>.registryEntries[key].push_back(value);
-}
-//----------------------------------------------------print-------------------------------------------------------------
-void PrintIntInt () {
-    for (auto & registryEntrie : registry<int, int>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (int i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-void PrintIntDouble () {
-    for (auto & registryEntrie : registry<int, double>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (double i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-void PrintIntString () {
-    for (auto & registryEntrie : registry<int, std::string>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (const auto & i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-//----------------------------------------------------------------------------------------------------------------------
-void PrintDoubleInt () {
-    for (auto & registryEntrie : registry<double, int>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (int i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-void PrintDoubleDouble () {
-    for (auto & registryEntrie : registry<double, double>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (double i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-void PrintDoubleString () {
-    for (auto & registryEntrie : registry<double, std::string>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (const auto & i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-//----------------------------------------------------------------------------------------------------------------------
-void PrintStringInt () {
-    for (auto & registryEntrie : registry<std::string, int>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (int i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-void PrintStringDouble () {
-    for (auto & registryEntrie : registry<std::string, double>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (double i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-void PrintStringString () {
-    for (auto & registryEntrie : registry<std::string, std::string>.registryEntries) {
-        std::cout << registryEntrie.first << ": ";
-        for (const auto & i : registryEntrie.second)
-            std::cout << i << ", ";
-        std::cout << '\n';
-    }
-}
-//----------------------------------------------------------------------------------------------------------------------
-void Print() {
-    PrintIntInt(); PrintIntDouble(); PrintIntString();
-    PrintDoubleInt(); PrintDoubleDouble(); PrintDoubleString();
-    PrintStringInt(); PrintStringDouble(); PrintStringString();
-}
-//----------------------------------------------------find--------------------------------------------------------------
-template<typename T>
-void FindInt(const T& key) {
-    for (auto it = registry<T, int>.registryEntries.begin(); it != registry<T, int>.registryEntries.end(); ++it) {
-        if (it->first == key) {
-            for (int i = 0; i < it->second.size(); ++i)
-                std::cout << it->second[i] << ", ";
-        }
-    }
-}
-template<typename T>
-void FindDouble(const T& key) {
-    for (auto it = registry<T, double>.registryEntries.begin(); it != registry<T, double>.registryEntries.end(); ++it) {
-        if (it->first == key) {
-            for (int i = 0; i < it->second.size(); ++i)
-                std::cout << it->second[i] << ", ";
-        }
-    }
-}
-template<typename T>
-void FindString(const T& key) {
-    for (auto it = registry<T, std::string>.registryEntries.begin(); it != registry<T, std::string>.registryEntries.end(); ++it) {
-        if (it->first == key) {
-            for (int i = 0; i < it->second.size(); ++i)
-                std::cout << it->second[i] << ", ";
-        }
-    }
-}
-
-template<typename T>
-void Find(T key) {
-    FindInt(key);
-    FindDouble(key);
-    FindString(key);
-    std::cout << '\n';
-}
-//----------------------------------------------------remove------------------------------------------------------------
-template<typename T>
-void RemoveInt(const T& key) {
-    registry<T, int>.registryEntries.erase(key);
-}
-template<typename T>
-void RemoveDouble(const T& key) {
-    registry<T, double>.registryEntries.erase(key);
-}
-template<typename T>
-void RemoveString(const T& key) {
-    registry<T, std::string>.registryEntries.erase(key);
-}
-
-template<typename T>
-void Remove(T key) {
-    RemoveInt(key);
-    RemoveDouble(key);
-    RemoveString(key);
-}
-//----------------------------------------------------------------------------------------------------------------------
 bool CheckingForDouble(std::string& str) {
     bool good = true;
 
@@ -178,7 +35,7 @@ bool CheckingForDouble(std::string& str) {
                 found = true;
                 good = false;
             }
-    } else if (positionPoint > 0 && positionPoint < str.length() - 1 && str[str.length() - 1] != '0') {
+    } else if (positionPoint > 0 && positionPoint < str.length() - 1) {
         bool found = false;
         for (int i = 0; i < positionPoint && !found; i++)
             if (str[i] < '0' || str[i] > '9') {
@@ -216,6 +73,83 @@ std::string VariableType(std::string& str) {
         return "string";
     }
 }
+
+//----------------------------------------------------add---------------------------------------------------------------
+template<typename T1, typename T2>
+void Add(T1 key, T2 value) {
+    registry<T1, T2>.registryEntries[key].push_back(value);
+}
+//----------------------------------------------------print-------------------------------------------------------------
+template<typename T>
+void PrintInt() {
+    for (auto it = registry<int, T>.registryEntries.begin(); it != registry<int, T>.registryEntries.end(); ++it) {
+        std::cout << it->first << ": ";
+        for (int i = 0; i < it->second.size(); ++i)
+            std::cout << it->second[i] << ", ";
+        std::cout << '\n';
+    }
+}
+
+template<typename T>
+void PrintDouble() {
+    for (auto it = registry<double, T>.registryEntries.begin(); it != registry<double, T>.registryEntries.end(); ++it) {
+        std::cout << it->first << ": ";
+        for (int i = 0; i < it->second.size(); ++i)
+            std::cout << it->second[i] << ", ";
+        std::cout << '\n';
+    }
+}
+
+template<typename T>
+void PrintString() {
+    for (auto it = registry<std::string, T>.registryEntries.begin(); it != registry<std::string, T>.registryEntries.end(); ++it) {
+        std::cout << it->first << ": ";
+        for (int i = 0; i < it->second.size(); ++i)
+            std::cout << it->second[i] << ", ";
+        std::cout << '\n';
+    }
+}
+
+template<typename T>
+void BeforePrint() {
+    PrintInt<T>();
+    PrintDouble<T>();
+    PrintString<T>();
+}
+void Print() {
+    BeforePrint<int>(); BeforePrint<double>(); BeforePrint<std::string>();
+}
+//----------------------------------------------------find--------------------------------------------------------------
+template<typename T1, typename T2>
+void FindAllTypes(const T1& key) {
+    for (auto it = registry<T1, T2>.registryEntries.begin(); it != registry<T1, T2>.registryEntries.end(); ++it) {
+        if (it->first == key) {
+            for (int i = 0; i < it->second.size(); ++i)
+                std::cout << it->second[i] << ", ";
+        }
+    }
+}
+
+template<typename T>
+void Find(T key) {
+    FindAllTypes<T, int>(key);
+    FindAllTypes<T, double>(key);
+    FindAllTypes<T, std::string>(key);
+    std::cout << '\n';
+}
+//----------------------------------------------------remove------------------------------------------------------------
+template<typename T1, typename T2>
+void RemoveAllTypes(const T1& key) {
+    registry<T1, T2>.registryEntries.erase(key);
+}
+
+template<typename T>
+void Remove(T key) {
+    RemoveAllTypes<T, int>(key);
+    RemoveAllTypes<T, double>(key);
+    RemoveAllTypes<T, std::string>(key);
+}
+//----------------------------------------------------------------------------------------------------------------------
 
 void BeforeAdd(std::string& strKey, std::string& strValue) {
     if (VariableType(strKey) == "int" && VariableType(strValue) == "int")
