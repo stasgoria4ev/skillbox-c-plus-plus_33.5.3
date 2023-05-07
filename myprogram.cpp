@@ -80,9 +80,9 @@ void Add(T1 key, T2 value) {
     registry<T1, T2>.registryEntries[key].push_back(value);
 }
 //----------------------------------------------------print-------------------------------------------------------------
-template<typename T>
-void PrintInt() {
-    for (auto it = registry<int, T>.registryEntries.begin(); it != registry<int, T>.registryEntries.end(); ++it) {
+template<typename T1, typename T2>
+void PrintAllTypes() {
+    for (auto it = registry<T1, T2>.registryEntries.begin(); it != registry<T1, T2>.registryEntries.end(); ++it) {
         std::cout << it->first << ": ";
         for (int i = 0; i < it->second.size(); ++i)
             std::cout << it->second[i] << ", ";
@@ -90,34 +90,10 @@ void PrintInt() {
     }
 }
 
-template<typename T>
-void PrintDouble() {
-    for (auto it = registry<double, T>.registryEntries.begin(); it != registry<double, T>.registryEntries.end(); ++it) {
-        std::cout << it->first << ": ";
-        for (int i = 0; i < it->second.size(); ++i)
-            std::cout << it->second[i] << ", ";
-        std::cout << '\n';
-    }
-}
-
-template<typename T>
-void PrintString() {
-    for (auto it = registry<std::string, T>.registryEntries.begin(); it != registry<std::string, T>.registryEntries.end(); ++it) {
-        std::cout << it->first << ": ";
-        for (int i = 0; i < it->second.size(); ++i)
-            std::cout << it->second[i] << ", ";
-        std::cout << '\n';
-    }
-}
-
-template<typename T>
-void BeforePrint() {
-    PrintInt<T>();
-    PrintDouble<T>();
-    PrintString<T>();
-}
 void Print() {
-    BeforePrint<int>(); BeforePrint<double>(); BeforePrint<std::string>();
+    PrintAllTypes<int, int>(); PrintAllTypes<int, double>(); PrintAllTypes<int, std::string>();
+    PrintAllTypes<double, int>(); PrintAllTypes<double, double>(); PrintAllTypes<double, std::string>();
+    PrintAllTypes<std::string, int>(); PrintAllTypes<std::string, double>(); PrintAllTypes<std::string, std::string>();
 }
 //----------------------------------------------------find--------------------------------------------------------------
 template<typename T1, typename T2>
